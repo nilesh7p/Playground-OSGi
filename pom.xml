@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>np.playground</groupId>
+    <artifactId>OsgiPlayground-v0</artifactId>
+    <packaging>pom</packaging>
+
+    <version>0.0.1-SNAPSHOT</version>
+
+    <modules>
+        <module>playground-core</module>
+        <module>testapp</module>
+        <!--<module>testapp2</module>-->
+    </modules>
+
+    <properties>
+        <maven.compiler.version>3.8.1</maven.compiler.version>
+        <maven.compiler.source.version>1.8</maven.compiler.source.version>
+        <maven.compiler.target.version>1.8</maven.compiler.target.version>
+        <maven.bundle.version>4.2.1</maven.bundle.version>
+        <playground-version>0.0.1-SNAPSHOT</playground-version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.main</artifactId>
+            <version>6.0.3</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.log</artifactId>
+            <version>1.2.2</version>
+        </dependency>-->
+        <!-- <dependency>
+             <groupId>org.osgi</groupId>
+             <artifactId>osgi.core</artifactId>
+             <version>6.0.0</version>
+         </dependency>
+         <dependency>
+             <groupId>org.osgi</groupId>
+             <artifactId>org.osgi.service.log</artifactId>
+             <version>1.4.0</version>
+         </dependency>-->
+    </dependencies>
+
+</project>
