@@ -7,12 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="testapp" />
-        <module name="testapp2" />
         <module name="playground-core" />
+        <module name="testapp2" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="testapp2" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

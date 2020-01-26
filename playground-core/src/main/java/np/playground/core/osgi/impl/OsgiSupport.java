@@ -8,9 +8,8 @@ import org.osgi.framework.ServiceEvent;
 public class OsgiSupport {
 
 
-    public static String getObjectClass(final ServiceEvent $receiver) {
-
-        final Object property = $receiver.getServiceReference().getProperty("objectClass");
+    public static String getObjectClass(final ServiceEvent serviceEvent) {
+        final Object property = serviceEvent.getServiceReference().getProperty("objectClass");
         if (property == null) {
             throw new TypeCastException("null cannot be cast to non-null type kotlin.Array<kotlin.String>");
         }
@@ -29,7 +28,6 @@ public class OsgiSupport {
 
 
     public static Long getBundleId(final Class<?> classFromBundle) {
-
         try {
             final Bundle bundle = FrameworkUtil.getBundle(classFromBundle);
             return (bundle != null) ? bundle.getBundleId() : null;

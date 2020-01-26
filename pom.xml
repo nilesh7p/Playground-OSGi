@@ -30,11 +30,11 @@
             <artifactId>org.apache.felix.main</artifactId>
             <version>6.0.3</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.log</artifactId>
             <version>1.2.2</version>
-        </dependency>-->
+        </dependency>
         <!-- <dependency>
              <groupId>org.osgi</groupId>
              <artifactId>osgi.core</artifactId>

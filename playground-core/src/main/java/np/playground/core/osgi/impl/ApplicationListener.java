@@ -31,7 +31,7 @@ public class ApplicationListener implements ServiceListener {
             System.out.println("Application Provider Service tracker running.");
 
             Object[] providerServices = tracker.getServices();
-
+            System.out.println("Services: " + Arrays.toString(providerServices));
             if (Objects.nonNull(providerServices)) {
                 Arrays.stream(providerServices).forEach(appProvider -> {
                     try {
@@ -103,7 +103,7 @@ public class ApplicationListener implements ServiceListener {
         if (!getHasActiveApplication()) {
             startDelegate(appProvider);
         } else {
-            System.out.println((Object) ("An application already running, not starting " + appProvider.getApplication() + '.'));
+            System.out.println("An application already running, not starting " + appProvider.getApplication() + '.');
         }
     }
 
@@ -111,12 +111,22 @@ public class ApplicationListener implements ServiceListener {
         ApplicationListener.ensureFxRuntimeInitialized();
         ApplicationListener.delegate = provider.getApplication();
         if (ApplicationListener.realPrimaryStage == null) {
-            System.out.print((Object) "Waiting for Primary Stage to be initialized");
-            while (ApplicationListener.realPrimaryStage == null) {
+            System.out.println("Waiting for Primary Stage to be initialized");
+            // long sleepTime =0L;
+            do {
                 Thread.sleep(100L);
-                System.out.print((Object) ".");
-            }
-            System.out.println((Object) "[Done]");
+                System.out.print(". ");
+                /*sleepTime+=100L;
+                if(sleepTime==500L){
+                    System.out.println("Trying to re - initialize runtime");
+                    Platform.exit();
+                    Thread.sleep(100L);
+                    fxRuntimeInitializer().start();
+                }*/
+
+            } while (ApplicationListener.realPrimaryStage == null);
+
+            System.out.println("[Done]");
         }
         final App delegate = ApplicationListener.delegate;
         if (delegate == null) {
@@ -143,25 +153,29 @@ public class ApplicationListener implements ServiceListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            realPrimaryStage.toFront();
+            //realPrimaryStage.toFront();
         });
     }
 
     private static void ensureFxRuntimeInitialized() throws InterruptedException, NoSuchFieldException, IllegalAccessException {
         if (fxRuntimeNotInitialized()) {
-            new Thread(() -> {
-                ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-                Thread.currentThread().setContextClassLoader(ApplicationListener.class.getClassLoader());
-                Application.launch(ProxyApplication.class);
-                Thread.currentThread().setContextClassLoader(originalClassLoader);
-            }).start();
-            System.out.print((Object) "Waiting for JavaFX Runtime Startup");
+            fxRuntimeInitializer().start();
+            System.out.println("Waiting for JavaFX Runtime Startup");
             do {
                 Thread.sleep(100L);
-                System.out.print((Object) ".");
+                System.out.print(". ");
             } while (fxRuntimeNotInitialized());
-            System.out.println((Object) "[Done]");
+            System.out.println("[Done]");
         }
+    }
+
+    private static Thread fxRuntimeInitializer() {
+        return new Thread(() -> {
+            ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(ApplicationListener.class.getClassLoader());
+            Application.launch(ProxyApplication.class);
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
+        });
     }
 
     private static void stopDelegate() {
