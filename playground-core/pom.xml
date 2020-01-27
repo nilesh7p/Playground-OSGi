@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>OSGiPlayground-v1</artifactId>
+        <groupId>np.playground</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>np.playground.core</groupId>
+    <artifactId>playground-core</artifactId>
+    <packaging>jar</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>4.2.1</version>
+                <configuration>
+                    <instructions>
+                        <!--<Export-Package>org.osgi.service.log</Export-Package>-->
+                        <!--<Private-Package>org.apache.felix.log.impl</Private-Package>-->
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Activator>${project.groupId}.osgi.impl.Activator</Bundle-Activator>
+                        <!-- <Export-Service>org.osgi.service.log.LogService,org.osgi.service.log.LogReaderService
+                         </Export-Service>-->
+                    </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <echo>ANT TASK - copying files....</echo>
+                                <copy todir="${bundle.out.dir}/playground" overwrite="true" flatten="true">
+                                    <fileset dir="${basedir}" includes="*.bat">
+                                        <include name="*.bat"/>
+                                        <include name="ReadME.*"/>
+                                        <include name="target/*.jar"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="${bundle.out.dir}" overwrite="true" flatten="true">
+                                    <fileset dir="${basedir}" includes="*.bat">
+                                        <include name="*.bat"/>
+                                        <include name="ReadME.*"/>
+                                        <include name="target/*.jar"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
