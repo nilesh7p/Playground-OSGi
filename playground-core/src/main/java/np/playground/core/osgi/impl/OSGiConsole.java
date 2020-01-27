@@ -1,5 +1,6 @@
 package np.playground.core.osgi.impl;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -7,10 +8,13 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -18,7 +22,10 @@ import org.osgi.framework.startlevel.BundleStartLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static np.playground.core.util.PlaygroundUtil.containsIgnoreCase;
@@ -26,11 +33,11 @@ import static np.playground.core.util.PlaygroundUtil.containsIgnoreCase;
 public class OSGiConsole extends BorderPane {
     static Logger log = LoggerFactory.getLogger(OSGiConsole.class);
     private final BundleContext context;
-    TableView<BundleK> tableView;
 
     BooleanProperty showing = new SimpleBooleanProperty(false);
 
     ListProperty<BundleK> bundles = new SimpleListProperty<>(FXCollections.observableArrayList());
+    ListProperty<BundleK> systembundles = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     @SuppressWarnings("unchecked")
     public OSGiConsole(BundleContext context) {
@@ -38,7 +45,33 @@ public class OSGiConsole extends BorderPane {
         context.addBundleListener(this::refreshTable);
         setPrefHeight(800);
         setPrefWidth(600);
-        tableView = new TableView<>();
+        ScrollPane p = createPlaygroundPane();
+        ScrollPane p2 = createSystemPane();
+        VBox b = new VBox(
+                p, p2
+        );
+        VBox.setVgrow(p, Priority.ALWAYS);
+        VBox.setVgrow(p2, Priority.ALWAYS);
+        setCenter(b);
+        showing.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                new Thread(() -> refreshTable(null)).start();
+            }
+        });
+    }
+
+    private ScrollPane createSystemPane() {
+        TableView<BundleK> tableView = createTableView();
+        tableView.itemsProperty().bind(systembundles);
+        //refreshTable(null);
+        ScrollPane p = new ScrollPane(tableView);
+        p.setFitToWidth(true);
+        p.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        return p;
+    }
+
+    private TableView<BundleK> createTableView() {
+        TableView<BundleK> tableView = new TableView<>();
         tableView.setPlaceholder(new Label("No rows to display"));
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<BundleK, Long> id = new TableColumn<>("bundleId");
@@ -57,10 +90,17 @@ public class OSGiConsole extends BorderPane {
         description.setCellValueFactory(new PropertyValueFactory<>("description"));
 
         tableView.getColumns().addAll(id, state, level, description);
+        return tableView;
+    }
 
+    private ScrollPane createPlaygroundPane() {
+        TableView<BundleK> tableView = createTableView();
         tableView.itemsProperty().bind(bundles);
-        refreshTable(null);
-        setCenter(tableView);
+        // refreshTable(null);
+        ScrollPane p = new ScrollPane(tableView);
+        p.setFitToWidth(true);
+        p.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        return p;
     }
 
     private void setColWidth(TableColumn<?, ?> column, double width) {
@@ -85,6 +125,16 @@ public class OSGiConsole extends BorderPane {
                             .collect(Collectors.toList())
                     )
             );
+            setSystemBundles(FXCollections.observableArrayList(
+                    bundleKS.stream()
+                            .filter(b ->
+                                    !(containsIgnoreCase("playground", b.getDescription()) ||
+                                            containsIgnoreCase("System Bundle", b.getDescription()))
+                            )
+                            .sorted(Comparator.comparing(BundleK::getDescription))
+                            .collect(Collectors.toList())
+                    )
+            );
 
         }
     }
@@ -100,7 +150,7 @@ public class OSGiConsole extends BorderPane {
             k.setState(-9999);
         }
 
-        if (b.getHeaders() != null && !b.getHeaders().isEmpty()) {
+        /*if (b.getHeaders() != null && !b.getHeaders().isEmpty()) {
             Enumeration<String> keys = b.getHeaders().keys();
             log.info("#####################################################");
             while (keys.hasMoreElements()) {
@@ -108,7 +158,7 @@ public class OSGiConsole extends BorderPane {
                 log.info("{} - {}", s, b.getHeaders().get(s));
             }
             log.info("#####################################################");
-        }
+        }*/
         k.setStateDescription(getStateDescription(b));
         return k;
     }
@@ -158,8 +208,12 @@ public class OSGiConsole extends BorderPane {
         return name + " | " + $receiver.getVersion();
     }
 
-    public void setBundles(ObservableList<BundleK> bundles) {
-        this.bundles.set(bundles);
+    private void setBundles(ObservableList<BundleK> bundles) {
+        Platform.runLater(()->this.bundles.set(bundles));
+    }
+
+    private void setSystemBundles(ObservableList<BundleK> bundles) {
+        Platform.runLater(()->this.systembundles.set(bundles));
     }
 
     public boolean isShowing() {

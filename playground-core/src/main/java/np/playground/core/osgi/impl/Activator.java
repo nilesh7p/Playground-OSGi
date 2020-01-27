@@ -10,10 +10,14 @@ public class Activator implements BundleActivator {
 
     private BundleContext bundleContext;
     Logger log = LoggerFactory.getLogger(this.getClass());
+
+    AppListener appListener;
+
+
     @Override
     public void start(BundleContext bundleContext) throws Exception {
         this.bundleContext = bundleContext;
-        AppListener appListener = new AppListener(bundleContext);
+        appListener = new AppListener(bundleContext);
         AppBundleListener appBundleListener = new AppBundleListener(bundleContext);
         AppFrameworkListener appFrameworkListener = new AppFrameworkListener(bundleContext);
         bundleContext.addServiceListener(appListener);
@@ -27,7 +31,7 @@ public class Activator implements BundleActivator {
     @Override
     public void stop(BundleContext bundleContext) throws Exception {
         log.info("Stopping Playground");
-        Platform.exit();
-        System.exit(0);
+        appListener.closeAllApps();
+        //Platform.exit();
     }
 }

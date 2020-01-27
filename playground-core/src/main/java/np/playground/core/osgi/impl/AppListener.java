@@ -1,5 +1,6 @@
 package np.playground.core.osgi.impl;
 
+import com.jfoenix.controls.JFXDecorator;
 import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -16,9 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static np.playground.core.util.PlaygroundUtil.getObjectClass;
@@ -29,6 +28,7 @@ public class AppListener implements ServiceListener {
     private static Stage primaryStage;
     private Stage osgiConsoleStage;
     OSGiConsole console;
+    Set<Stage> stages = new HashSet<>();
 
     static Logger log = LoggerFactory.getLogger(AppListener.class);
 
@@ -47,7 +47,8 @@ public class AppListener implements ServiceListener {
             console.setShowing(false);
             osgiConsoleStage.hide();
         });
-        osgiConsoleStage.setScene(new Scene(console));
+        osgiConsoleStage.setScene(new Scene(new JFXDecorator(osgiConsoleStage, console)));
+        //stages.add(osgiConsoleStage);
     }
 
     private void startTracker() {
@@ -65,7 +66,7 @@ public class AppListener implements ServiceListener {
                 try {
                     start((AppProvider) service);
                 } catch (Exception e) {
-                    log.error("",e);
+                    log.error("", e);
                 }
             });
         } else {
@@ -96,7 +97,7 @@ public class AppListener implements ServiceListener {
                         initConsole();
                     }
                 } catch (Exception e) {
-                    log.error("",e);
+                    log.error("", e);
                 }
             });
         }
@@ -110,6 +111,7 @@ public class AppListener implements ServiceListener {
                 showConsole();
             }
         });
+        stages.add(temp);
         return temp;
     }
 
@@ -134,7 +136,7 @@ public class AppListener implements ServiceListener {
                     bundle.get().stop();
                     log.info("[" + appName + "] . BundleId [" + bundle.get().getBundleId() + "] . STOPPED");
                 } catch (BundleException be) {
-                    log.error("",be);
+                    log.error("", be);
                 }
             }
         }
@@ -157,7 +159,7 @@ public class AppListener implements ServiceListener {
             log.info("FX runtime init = " + initialized.get());
             return !initialized.get();
         } catch (Exception e) {
-            log.error("",e);
+            log.error("", e);
         }
         return false;
     }
@@ -173,7 +175,7 @@ public class AppListener implements ServiceListener {
                 } while (fxRuntimeNotInitialized());
                 log.info("[Done]");
             } catch (Exception e) {
-                log.error("",e);
+                log.error("", e);
             }
         }
     }
@@ -194,7 +196,7 @@ public class AppListener implements ServiceListener {
                 }
             }
         } catch (Exception e) {
-            log.error("",e);
+            log.error("", e);
         }
     }
 
@@ -217,5 +219,13 @@ public class AppListener implements ServiceListener {
 
     private static void setRealPrimaryStage(Stage stage) {
         primaryStage = stage;
+    }
+
+    public void closeAllApps() {
+        Platform.runLater(() -> {
+            osgiConsoleStage.setOnCloseRequest(null);
+            osgiConsoleStage.close();
+            stages.forEach(Stage::close);
+        });
     }
 }
