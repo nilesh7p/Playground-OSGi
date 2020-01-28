@@ -12,6 +12,7 @@
         <module>playground-core</module>
         <module>testapp</module>
         <module>testanotherapp</module>
+        <module>playground-tray</module>
     </modules>
 
     <properties>
@@ -50,10 +51,51 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.30</version>
         </dependency>
-        <dependency>
-            <groupId>com.jfoenix</groupId>
-            <artifactId>jfoenix</artifactId>
-            <version>8.0.8</version>
+        <!--<dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>2.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-materialdesign-pack</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-material-pack</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-fontawesome-pack</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-fontawesome5-pack</artifactId>
+            <version>2.4.0</version>
+        </dependency>-->
+        <!--  <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-materialdesignfont</artifactId>
+            <version>1.7.22-4</version>
+        </dependency>
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-commons</artifactId>
+            <version>8.15</version>
+        </dependency>-->
+       <dependency>
+             <groupId>com.jfoenix</groupId>
+             <artifactId>jfoenix</artifactId>
+             <version>8.0.8</version>
+         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>bintray</id>
+            <url>https://dl.bintray.com/jerady/maven/</url>
+        </repository>
+    </repositories>
 </project>
