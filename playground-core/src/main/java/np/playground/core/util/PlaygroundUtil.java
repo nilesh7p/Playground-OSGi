@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 
 public class PlaygroundUtil {
-    static Logger log = LoggerFactory.getLogger(PlaygroundUtil.class);
+    static Logger logger = LoggerFactory.getLogger(PlaygroundUtil.class);
 
     public static Filter createObjectClassFilter(String s) {
         try {
             return FrameworkUtil.createFilter("(&(objectClass=" + s + "))");
         } catch (Exception e) {
-            log.error("", e);
+            logger.error("", e);
         }
         return null;
     }

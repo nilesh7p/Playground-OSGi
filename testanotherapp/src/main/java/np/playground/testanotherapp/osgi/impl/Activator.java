@@ -3,10 +3,10 @@ package np.playground.testanotherapp.osgi.impl;
 import np.playground.core.App;
 import np.playground.core.AppProvider;
 import np.playground.testanotherapp.TestAnotherApp;
-import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-public class Activator implements BundleActivator, AppProvider {
+@SuppressWarnings("all")
+public class Activator implements AppProvider {
     private TestAnotherApp app;
 
     @Override
@@ -20,8 +20,4 @@ public class Activator implements BundleActivator, AppProvider {
         registerApp(bundleContext);
     }
 
-    @Override
-    public void stop(BundleContext bundleContext) throws Exception {
-
-    }
 }

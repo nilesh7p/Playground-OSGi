@@ -7,14 +7,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -26,12 +21,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static np.playground.core.util.PlaygroundUtil.containsIgnoreCase;
 
+@SuppressWarnings("unchecked")
 public class OSGiConsole extends BorderPane {
-    static Logger log = LoggerFactory.getLogger(OSGiConsole.class);
+    static Logger logger = LoggerFactory.getLogger(OSGiConsole.class);
     private final BundleContext context;
 
     BooleanProperty showing = new SimpleBooleanProperty(false);
@@ -39,20 +36,24 @@ public class OSGiConsole extends BorderPane {
     ListProperty<BundleK> bundles = new SimpleListProperty<>(FXCollections.observableArrayList());
     ListProperty<BundleK> systembundles = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    @SuppressWarnings("unchecked")
     public OSGiConsole(BundleContext context) {
         this.context = context;
         context.addBundleListener(this::refreshTable);
-        setPrefHeight(800);
         setPrefWidth(600);
-        ScrollPane p = createPlaygroundPane();
-        ScrollPane p2 = createSystemPane();
-        VBox b = new VBox(
+        setPrefHeight(300);
+        TitledPane p = createPlaygroundPane();
+        p.setAnimated(true);
+        p.setText("Playground Bundles");
+        TitledPane p2 = createSystemPane();
+        p2.setAnimated(true);
+        p2.setExpanded(false);
+        p2.setText("Framework Bundles");
+        Accordion accordion = new Accordion(
                 p, p2
         );
-        VBox.setVgrow(p, Priority.ALWAYS);
-        VBox.setVgrow(p2, Priority.ALWAYS);
-        setCenter(b);
+        accordion.setExpandedPane(p);
+
+        setCenter(accordion);
         showing.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 new Thread(() -> refreshTable(null)).start();
@@ -60,47 +61,92 @@ public class OSGiConsole extends BorderPane {
         });
     }
 
-    private ScrollPane createSystemPane() {
+    private TitledPane createSystemPane() {
         TableView<BundleK> tableView = createTableView();
         tableView.itemsProperty().bind(systembundles);
-        //refreshTable(null);
-        ScrollPane p = new ScrollPane(tableView);
-        p.setFitToWidth(true);
-        p.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        return p;
+        TitledPane tp = new TitledPane();
+        tp.setContent(tableView);
+        tableView.setContextMenu(createMenu(tableView));
+        tableView.setOnContextMenuRequested(event -> {
+            AtomicReference<MenuItem> stop = new AtomicReference<>();
+            ObservableList<MenuItem> items = tableView.getContextMenu().getItems();
+            items.stream().filter(mi -> mi.getText().equals("Stop")).findFirst().ifPresent(mi -> {
+                BundleK selectedItem = tableView.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    mi.setDisable(!selectedItem.getState().equals(Bundle.ACTIVE));
+                    stop.set(mi);
+                }
+            });
+            items.stream().filter(mi -> mi.getText().equals("Start")).findFirst()
+                    .ifPresent(mi -> mi.setDisable(!stop.get().isDisable()));
+
+        });
+        return tp;
+    }
+
+    private TitledPane createPlaygroundPane() {
+        TableView<BundleK> tableView = createTableView();
+        tableView.itemsProperty().bind(bundles);
+        TitledPane tp = new TitledPane();
+        tp.setContent(tableView);
+        tableView.setContextMenu(createMenu(tableView));
+        tableView.setOnContextMenuRequested(event -> {
+            AtomicReference<MenuItem> stop = new AtomicReference<>();
+            ObservableList<MenuItem> items = tableView.getContextMenu().getItems();
+            items.stream().filter(mi -> mi.getText().equals("Stop")).findFirst().ifPresent(mi -> {
+                BundleK selectedItem = tableView.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    mi.setDisable(!selectedItem.getState().equals(Bundle.ACTIVE));
+                    stop.set(mi);
+                }
+            });
+            items.stream().filter(mi -> mi.getText().equals("Start")).findFirst().ifPresent(mi -> {
+                mi.setDisable(!stop.get().isDisable());
+            });
+
+        });
+        return tp;
     }
 
     private TableView<BundleK> createTableView() {
         TableView<BundleK> tableView = new TableView<>();
         tableView.setPlaceholder(new Label("No rows to display"));
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        TableColumn<BundleK, Long> id = new TableColumn<>("bundleId");
+        TableColumn<BundleK, Long> id = new TableColumn<>("ID");
         id.setCellValueFactory(new PropertyValueFactory<>("bundleId"));
         setColWidth(id, 75);
 
-        TableColumn<BundleK, String> state = new TableColumn<>("stateDescription");
+        TableColumn<BundleK, String> state = new TableColumn<>("State");
         state.setCellValueFactory(new PropertyValueFactory<>("stateDescription"));
         setColWidth(state, 120);
 
-        TableColumn<BundleK, Integer> level = new TableColumn<>("level");
+        TableColumn<BundleK, Integer> level = new TableColumn<>("Level");
         level.setCellValueFactory(new PropertyValueFactory<>("level"));
         setColWidth(level, 75);
 
-        TableColumn<BundleK, String> description = new TableColumn<>("description");
+        TableColumn<BundleK, String> description = new TableColumn<>("Name");
         description.setCellValueFactory(new PropertyValueFactory<>("description"));
 
         tableView.getColumns().addAll(id, state, level, description);
         return tableView;
     }
 
-    private ScrollPane createPlaygroundPane() {
-        TableView<BundleK> tableView = createTableView();
-        tableView.itemsProperty().bind(bundles);
-        // refreshTable(null);
-        ScrollPane p = new ScrollPane(tableView);
-        p.setFitToWidth(true);
-        p.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        return p;
+    private ContextMenu createMenu(TableView<BundleK> tableView) {
+        MenuItem stop = new MenuItem("Stop");
+        stop.setOnAction(e -> stopBundle(tableView));
+        MenuItem start = new MenuItem("Start");
+        start.setOnAction(e -> startBundle(tableView));
+        MenuItem uninstall = new MenuItem("Uninstall");
+        uninstall.setOnAction(e -> uninstallBundle(tableView));
+        MenuItem update = new MenuItem("Update");
+        update.setOnAction(e -> updateBundle(tableView));
+        MenuItem updateFrom = new MenuItem("Update from...");
+        updateFrom.setOnAction(e -> updateFromBundle(tableView));
+        MenuItem setLevel = new MenuItem("Set start level...");
+        setLevel.setOnAction(e -> setLevelBundle(tableView));
+        ContextMenu cm = new ContextMenu();
+        cm.getItems().addAll(stop, start, uninstall, update, updateFrom, setLevel);
+        return cm;
     }
 
     private void setColWidth(TableColumn<?, ?> column, double width) {
@@ -118,8 +164,7 @@ public class OSGiConsole extends BorderPane {
             setBundles(FXCollections.observableArrayList(
                     bundleKS.stream()
                             .filter(b ->
-                                    containsIgnoreCase("playground", b.getDescription()) ||
-                                            containsIgnoreCase("System Bundle", b.getDescription())
+                                    containsIgnoreCase("playground", b.getDescription())
                             )
                             .sorted(Comparator.comparing(BundleK::getDescription))
                             .collect(Collectors.toList())
@@ -128,8 +173,7 @@ public class OSGiConsole extends BorderPane {
             setSystemBundles(FXCollections.observableArrayList(
                     bundleKS.stream()
                             .filter(b ->
-                                    !(containsIgnoreCase("playground", b.getDescription()) ||
-                                            containsIgnoreCase("System Bundle", b.getDescription()))
+                                    !containsIgnoreCase("playground", b.getDescription())
                             )
                             .sorted(Comparator.comparing(BundleK::getDescription))
                             .collect(Collectors.toList())
@@ -141,25 +185,17 @@ public class OSGiConsole extends BorderPane {
 
     private BundleK toBundleK(Bundle b) {
         BundleK k = new BundleK();
+        k.setBundle(b);
         k.setBundleId(b.getBundleId());
         k.setDescription(getDescription(b));
         BundleStartLevel adapt = b.adapt(BundleStartLevel.class);
         if (adapt != null) {
-            k.setState(adapt.getStartLevel());
+            k.setLevel(adapt.getStartLevel());
         } else {
-            k.setState(-9999);
+            k.setLevel(-9999);
         }
-
-        /*if (b.getHeaders() != null && !b.getHeaders().isEmpty()) {
-            Enumeration<String> keys = b.getHeaders().keys();
-            log.info("#####################################################");
-            while (keys.hasMoreElements()) {
-                String s = keys.nextElement();
-                log.info("{} - {}", s, b.getHeaders().get(s));
-            }
-            log.info("#####################################################");
-        }*/
         k.setStateDescription(getStateDescription(b));
+        k.setState(b.getState());
         return k;
     }
 
@@ -209,11 +245,11 @@ public class OSGiConsole extends BorderPane {
     }
 
     private void setBundles(ObservableList<BundleK> bundles) {
-        Platform.runLater(()->this.bundles.set(bundles));
+        Platform.runLater(() -> this.bundles.set(bundles));
     }
 
     private void setSystemBundles(ObservableList<BundleK> bundles) {
-        Platform.runLater(()->this.systembundles.set(bundles));
+        Platform.runLater(() -> this.systembundles.set(bundles));
     }
 
     public boolean isShowing() {
@@ -232,7 +268,26 @@ public class OSGiConsole extends BorderPane {
         public Long bundleId;
         public String stateDescription;
         public Integer state;
+
+        public Integer getLevel() {
+            return level;
+        }
+
+        public void setLevel(Integer level) {
+            this.level = level;
+        }
+
+        public Integer level;
         public String description;
+        private Bundle bundle;
+
+        public Bundle getBundle() {
+            return bundle;
+        }
+
+        public void setBundle(Bundle bundle) {
+            this.bundle = bundle;
+        }
 
         public Long getBundleId() {
             return bundleId;
@@ -275,5 +330,91 @@ public class OSGiConsole extends BorderPane {
                     ", description='" + description + '\'' +
                     ']';
         }
+    }
+
+    private void stopBundle(TableView<BundleK> tableView) {
+        BundleK selectedItem = tableView.getSelectionModel().getSelectedItem();
+        if (Objects.nonNull(selectedItem)) {
+            Bundle bundle = selectedItem.getBundle();
+            if (Objects.nonNull(bundle)) {
+                try {
+                    bundle.stop();
+                } catch (Exception e) {
+                    logger.error("", e);
+                }
+            }
+        }
+    }
+
+    private void startBundle(TableView<BundleK> tableView) {
+        BundleK selectedItem = tableView.getSelectionModel().getSelectedItem();
+        if (Objects.nonNull(selectedItem)) {
+            Bundle bundle = selectedItem.getBundle();
+            if (Objects.nonNull(bundle)) {
+                try {
+                    bundle.start();
+                } catch (Exception e) {
+                    logger.error("", e);
+                }
+            }
+        }
+    }
+
+    private void uninstallBundle(TableView<BundleK> tableView) {
+        BundleK selectedItem = tableView.getSelectionModel().getSelectedItem();
+        if (Objects.nonNull(selectedItem)) {
+            Bundle bundle = selectedItem.getBundle();
+            if (Objects.nonNull(bundle)) {
+                try {
+                    bundle.uninstall();
+                } catch (Exception e) {
+                    logger.error("", e);
+                }
+            }
+        }
+    }
+
+    private void updateBundle(TableView<BundleK> tableView) {
+        BundleK selectedItem = tableView.getSelectionModel().getSelectedItem();
+        if (Objects.nonNull(selectedItem)) {
+            Bundle bundle = selectedItem.getBundle();
+            if (Objects.nonNull(bundle)) {
+                try {
+                    bundle.update();
+                } catch (Exception e) {
+                    logger.error("", e);
+                }
+            }
+        }
+
+    }
+
+    private void updateFromBundle(TableView<BundleK> tableView) {
+       /* BundleK selectedItem = tableView.getSelectionModel().getSelectedItem();
+        if (Objects.nonNull(selectedItem)) {
+            Bundle bundle = selectedItem.getBundle();
+            if (Objects.nonNull(bundle)) {
+                try {
+                    bundle.stop();
+                } catch (Exception e) {
+                    logger.error("", e);
+                }
+            }
+        }*/
+
+       /* item("Update from...").action {
+            val result = chooseFile("Select file to replace ${selectedItem!!.symbolicName}", arrayOf(FileChooser.ExtensionFilter("OSGi Bundle Jar", "jar")))
+            if (result.isNotEmpty()) selectedItem?.update(Files.newInputStream(result.first().toPath()))
+        }*/
+
+    }
+
+    private void setLevelBundle(TableView<BundleK> tableView) {
+
+        /*item("Set start level...").action {
+            TextInputDialog("").showAndWait().ifPresent {
+                selectedItem!!.bundleContext.bundle.adapt(BundleStartLevel::class.java).startLevel = it.toInt()
+            }
+        }*/
     }
 }

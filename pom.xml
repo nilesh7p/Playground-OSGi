@@ -19,7 +19,7 @@
         <bundle.out.dir>
             C:\Users\Development\Desktop\OSGI\org.apache.felix.main.distribution-6.0.3\felix-framework-6.0.3\bundle
         </bundle.out.dir>
-
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>

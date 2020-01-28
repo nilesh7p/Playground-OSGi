@@ -30,11 +30,11 @@ public class AppListener implements ServiceListener {
     OSGiConsole console;
     Set<Stage> stages = new HashSet<>();
 
-    static Logger log = LoggerFactory.getLogger(AppListener.class);
+    static Logger logger = LoggerFactory.getLogger(AppListener.class);
 
     public AppListener(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
-        log.info("Starting Tracker for [AppProvider]");
+        logger.info("Starting Tracker for [AppProvider]");
         startTracker();
         startAppsIfAvailable();
     }
@@ -48,7 +48,6 @@ public class AppListener implements ServiceListener {
             osgiConsoleStage.hide();
         });
         osgiConsoleStage.setScene(new Scene(new JFXDecorator(osgiConsoleStage, console)));
-        //stages.add(osgiConsoleStage);
     }
 
     private void startTracker() {
@@ -66,11 +65,11 @@ public class AppListener implements ServiceListener {
                 try {
                     start((AppProvider) service);
                 } catch (Exception e) {
-                    log.error("", e);
+                    logger.error("", e);
                 }
             });
         } else {
-            log.info("No Apps to Start");
+            logger.info("No Apps to Start");
         }
     }
 
@@ -79,25 +78,25 @@ public class AppListener implements ServiceListener {
         if (Objects.nonNull(provider)) {
             ensureFxRuntimeInitialized();
             if (primaryStage == null) {
-                log.info("Waiting for Primary Stage");
+                logger.info("Waiting for Primary Stage");
                 do {
                     Thread.sleep(100L);
                     System.out.print(". ");
                 } while (primaryStage == null);
-                log.info("[Done].");
+                logger.info("[Done].");
             }
             App app = Objects.requireNonNull(provider.getApp());
-            log.info("[" + app.getAppName() + "] init()");
+            logger.info("[" + app.getAppName() + "] init()");
             app.init();
             Platform.runLater(() -> {
                 try {
-                    log.info("[" + app.getAppName() + "] start()");
+                    logger.info("[" + app.getAppName() + "] start()");
                     app.start(getNewStage(app.getAppName()));
                     if (osgiConsoleStage == null) {
                         initConsole();
                     }
                 } catch (Exception e) {
-                    log.error("", e);
+                    logger.error("", e);
                 }
             });
         }
@@ -126,17 +125,17 @@ public class AppListener implements ServiceListener {
     }
 
     private void doOnClose(String appName) {
-        log.info("[" + appName + "] close()");
+        logger.info("[" + appName + "] close()");
         Bundle[] bundles = bundleContext.getBundles();
         if (Objects.nonNull(bundles)) {
             Optional<Bundle> bundle = Arrays.stream(bundles).filter(b -> b.getSymbolicName().equals(appName)).findFirst();
             if (bundle.isPresent()) {
                 try {
-                    log.info("[" + appName + "] . BundleId [" + bundle.get().getBundleId() + "] . STOPPING");
+                    logger.info("[" + appName + "] . BundleId [" + bundle.get().getBundleId() + "] . STOPPING");
                     bundle.get().stop();
-                    log.info("[" + appName + "] . BundleId [" + bundle.get().getBundleId() + "] . STOPPED");
+                    logger.info("[" + appName + "] . BundleId [" + bundle.get().getBundleId() + "] . STOPPED");
                 } catch (BundleException be) {
-                    log.error("", be);
+                    logger.error("", be);
                 }
             }
         }
@@ -156,10 +155,10 @@ public class AppListener implements ServiceListener {
             Field initializedField = PlatformImpl.class.getDeclaredField("initialized");
             initializedField.setAccessible(true);
             AtomicBoolean initialized = (AtomicBoolean) initializedField.get(null);
-            log.info("FX runtime init = " + initialized.get());
+            logger.info("FX runtime init = " + initialized.get());
             return !initialized.get();
         } catch (Exception e) {
-            log.error("", e);
+            logger.error("", e);
         }
         return false;
     }
@@ -168,14 +167,14 @@ public class AppListener implements ServiceListener {
         if (fxRuntimeNotInitialized()) {
             try {
                 fxRuntimeInitializer().start();
-                log.info("Waiting for JavaFX Runtime Startup");
+                logger.info("Waiting for JavaFX Runtime Startup");
                 do {
                     Thread.sleep(100L);
                     System.out.print(". ");
                 } while (fxRuntimeNotInitialized());
-                log.info("[Done]");
+                logger.info("[Done]");
             } catch (Exception e) {
-                log.error("", e);
+                logger.error("", e);
             }
         }
     }
@@ -196,7 +195,7 @@ public class AppListener implements ServiceListener {
                 }
             }
         } catch (Exception e) {
-            log.error("", e);
+            logger.error("", e);
         }
     }
 
@@ -205,7 +204,7 @@ public class AppListener implements ServiceListener {
     }
 
     private void stop(AppProvider appProvider) {
-        // log.info(" Stop App " + appProvider.getApp().getAppName());
+        // logger.info(" Stop App " + appProvider.getApp().getAppName());
     }
 
     public static final class ProxyApplication extends Application {
@@ -213,7 +212,7 @@ public class AppListener implements ServiceListener {
         public void start(Stage primaryStage) {
             setRealPrimaryStage(primaryStage);
             Platform.setImplicitExit(false);
-            log.info("Proxy Application Started");
+            logger.info("Proxy Application Started");
         }
     }
 
