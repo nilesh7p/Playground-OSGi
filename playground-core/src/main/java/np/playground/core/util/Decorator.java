@@ -1,8 +1,6 @@
-/*
-package np.playground.core;
+package np.playground.core.util;
 
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialdesignicons.utils.MaterialDesignIconFactory;
+import com.jfoenix.svg.SVGGlyph;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -11,7 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -31,7 +29,7 @@ public final class Decorator extends VBox {
 
     Logger logger = LoggerFactory.getLogger(Decorator.class);
     private Stage primaryStage;
-    private final Parent nodeToDecorate;
+    private final Node nodeToDecorate;
 
     private double xOffset = 0;
     private double yOffset = 0;
@@ -64,7 +62,7 @@ public final class Decorator extends VBox {
 
     private StringProperty title = new SimpleStringProperty();
     private Text text;
-    private Text graphic;
+    private Node graphic;
     private HBox graphicContainer;
 
 
@@ -75,20 +73,18 @@ public final class Decorator extends VBox {
     private SimpleBooleanProperty snap = new SimpleBooleanProperty(true);
 
     private boolean snapped;
-*
+    /**
      * The prev size.
-
-
+     */
     private Delta prevSize;
 
-*
+    /**
      * The prev pos.
-
-
+     */
     private Delta prevPos;
 
 
-    public Decorator(Stage primaryStage, Parent nodeToDecorate) {
+    public Decorator(Stage primaryStage, Node nodeToDecorate) {
         this.primaryStage = primaryStage;
         this.nodeToDecorate = nodeToDecorate;
         prevSize = new Delta();
@@ -107,7 +103,7 @@ public final class Decorator extends VBox {
         primaryStage.initStyle(StageStyle.UNDECORATED);
         setId("decorator");
         setPickOnBounds(false);
-        setStyle("-fx-background-color: linear-gradient(to bottom right, #facb52 0.0%, #fc76b3 100%)");
+        // setStyle("-fx-background-color: linear-gradient(to bottom right, #facb52 0.0%, #fc76b3 100%)");
         logger.info("self initialization complete");
     }
 
@@ -119,35 +115,45 @@ public final class Decorator extends VBox {
     }
 
     private void initializeButtons() {
-FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(40,40,40,0.7)"));
-          FontIcon close = FontIcon.of(MaterialDesign.MDI_CLOSE, Color.valueOf("rgba(40,40,40,0.7)"));
-        FontIcon minus = FontIcon.of(MaterialDesign.MDI_WINDOW_MINIMIZE, Color.valueOf("rgba(40,40,40,0.7)"));
-        FontIcon resizeMax = FontIcon.of(MaterialDesign.MDI_WINDOW_MAXIMIZE, Color.valueOf("rgba(40,40,40,0.7)"));
-        FontIcon resizeMin = FontIcon.of(MaterialDesign.MDI_WINDOW_RESTORE, Color.valueOf("rgba(40,40,40,0.7)"));
+        SVGGlyph full = new SVGGlyph(0,
+                "FULLSCREEN",
+                "M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z",
+                Color.WHITE);
+        full.setSize(12, 12);
+        SVGGlyph minus = new SVGGlyph(0,
+                "MINUS",
+                "M20,14H4V10H20",
+                Color.WHITE);
+        minus.setSize(12, 2);
+        minus.setTranslateY(4);
+        SVGGlyph resizeMax = new SVGGlyph(0,
+                "RESIZE_MAX",
+                "M4,4H20V20H4V4M6,8V18H18V8H6Z",
+                Color.WHITE);
+        resizeMax.setSize(12, 12);
+        SVGGlyph resizeMin = new SVGGlyph(0,
+                "RESIZE_MIN",
+                "M4,8H8V4H20V16H16V20H4V8M16,8V14H18V6H10V8H16M6,12V18H14V12H6Z",
+                Color.WHITE);
+        resizeMin.setSize(12, 12);
+        SVGGlyph close = new SVGGlyph(0,
+                "CLOSE",
+                "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z",
+                Color.WHITE);
+        close.setSize(12, 12);
 
-        Text full = MaterialDesignIconFactory.get().createIcon(MaterialDesignIcon.FULLSCREEN);
-        Text close = MaterialDesignIconFactory.get().createIcon(MaterialDesignIcon.CLOSE);
-        Text minus = MaterialDesignIconFactory.get().createIcon(MaterialDesignIcon.WINDOW_MINIMIZE);
-        Text resizeMax = MaterialDesignIconFactory.get().createIcon(MaterialDesignIcon.WINDOW_MAXIMIZE);
-        Text resizeMin = MaterialDesignIconFactory.get().createIcon(MaterialDesignIcon.WINDOW_RESTORE);
-
-
-        btnMin = createButton("btnMin", minus, () -> primaryStage.setIconified(true));
         btnFull = createButton("btnFull", full, () -> primaryStage.setFullScreen(!primaryStage.isFullScreen()));
         btnClose = createButton("btnClose", close, () -> onCloseButtonAction.get().run());
+        btnMin = createButton("btnMin", minus, () -> primaryStage.setIconified(true));
 
-
-        full.setFill(Color.valueOf("rgba(40,40,40,0.7)"));
-        close.setFill(Color.valueOf("rgba(40,40,40,0.7)"));
-        minus.setFill(Color.valueOf("rgba(40,40,40,0.7)"));
-        resizeMax.setFill(Color.valueOf("rgba(40,40,40,0.7)"));
-        resizeMin.setFill(Color.valueOf("rgba(40,40,40,0.7)"));
+        //FontIcon resizeMax = FontIcon.of(MaterialDesign.MDI_WINDOW_MAXIMIZE, );
+        //FontIcon resizeMin = FontIcon.of(MaterialDesign.MDI_WINDOW_RESTORE, Color.valueOf("rgba(40,40,40,0.7)"));
 
         btnMax = createButton("btnMax", resizeMax, () -> maximize(resizeMin, resizeMax));
         logger.info("button initialization complete");
     }
 
-    private void maximize(Text resizeMin, Text resizeMax) {
+    private void maximize(Node resizeMin, Node resizeMax) {
         if (!isCustomMaximize()) {
             primaryStage.setMaximized(!primaryStage.isMaximized());
             maximized = primaryStage.isMaximized();
@@ -187,7 +193,7 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
         }
     }
 
-    private Button createButton(String id, Text graphic, Runnable handler) {
+    private Button createButton(String id, Node graphic, Runnable handler) {
         Button b = new Button();
         b.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         b.setId(id);
@@ -202,7 +208,7 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
     private void initializeContainer() {
         buttonsContainer = new HBox();
         buttonsContainer.getStyleClass().add("decorator-buttons-container");
-        buttonsContainer.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        buttonsContainer.setBackground(new Background(new BackgroundFill(Color.valueOf("rgba(0,0,0,0.5)"), CornerRadii.EMPTY, Insets.EMPTY)));
         buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
         buttonsContainer.setMinWidth(180);
 
@@ -283,10 +289,10 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
             if (newVal) {
                 // remove border
                 contentPlaceHolder.getStyleClass().remove("resize-border");
+                /*
                  *  note the border property MUST NOT be bound to another property
                  *  when going full screen mode, thus the binding will be lost if exisited
-
-
+                 */
                 contentPlaceHolder.borderProperty().unbind();
                 contentPlaceHolder.setBorder(Border.EMPTY);
                 if (windowDecoratorAnimation != null) {
@@ -378,9 +384,9 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
         if (!mouseEvent.isPrimaryButtonDown() || (xOffset == -1 && yOffset == -1)) {
             return;
         }
+        /*
          * Long press generates drag event!
-
-
+         */
         if (primaryStage.isFullScreen() || mouseEvent.isStillSincePress() || primaryStage.isMaximized() || maximized) {
             return;
         }
@@ -480,83 +486,75 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
         return false;
     }
 
-*
+    /**
      * set a speficed runnable when clicking on the close button
      *
      * @param onCloseButtonAction runnable to be executed
-
-
+     */
     public void setOnCloseButtonAction(Runnable onCloseButtonAction) {
         this.onCloseButtonAction.set(onCloseButtonAction);
     }
 
-*
+    /**
      * this property is used to replace JavaFX maximization
      * with a custom one that prevents hiding windows taskbar when
      * the JFXDecorator is maximized.
      *
      * @return customMaximizeProperty whether to use custom maximization or not.
-
-
+     */
     public final BooleanProperty customMaximizeProperty() {
         return this.customMaximize;
     }
 
-*
+    /**
      * @return whether customMaximizeProperty is active or not
-
-
+     */
     public final boolean isCustomMaximize() {
         return this.customMaximizeProperty().get();
     }
 
-*
+    /**
      * set customMaximize property
      *
      * @param customMaximize
-
-
+     */
     public final void setCustomMaximize(final boolean customMaximize) {
         this.customMaximizeProperty().set(customMaximize);
     }
 
-*
+    /**
      * @param maximized
-
-
+     */
     public void setMaximized(boolean maximized) {
         if (this.maximized != maximized) {
             Platform.runLater(() -> btnMax.fire());
         }
     }
 
-*
+    /**
      * will change the decorator content
      *
      * @param content
-
-
-    public void setContent(Parent content) {
+     */
+    public void setContent(Node content) {
         this.contentPlaceHolder.getChildren().setAll(content);
     }
 
-*
+    /**
      * will set the title
      *
      * @param text
      * @deprecated Use {@link Decorator#setTitle(java.lang.String)} instead.
-
-
+     */
     public void setText(String text) {
         setTitle(text);
     }
 
-*
+    /**
      * will get the title
      *
      * @deprecated Use {@link Decorator#setTitle(java.lang.String)} instead.
-
-
+     */
     public String getText() {
         return getTitle();
     }
@@ -565,31 +563,29 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
         return title.get();
     }
 
-*
+    /**
      * By default this title property is bound to the primaryStage's title property.
      * <p>
      * To change it to something else, use <pre>
      *     {@code jfxDecorator.titleProperty().unbind();}</pre> first.
-
-
+     */
     public StringProperty titleProperty() {
         return title;
     }
 
-*
+    /**
      * If you want the {@code primaryStage}'s title and the {@code JFXDecorator}'s title to be different, then
      * go ahead and use this method.
      * <p>
      * By default, this title property is bound to the {@code primaryStage}'s title property-so merely setting the
      * {@code primaryStage}'s title, will set the {@code JFXDecorator}'s title.
-
-
+     */
     public void setTitle(String title) {
         this.title.unbind();
         this.title.set(title);
     }
 
-    public void setGraphic(Text node) {
+    public void setGraphic(Node node) {
         if (graphic != null) {
             graphicContainer.getChildren().remove(graphic);
         }
@@ -599,7 +595,7 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
         graphic = node;
     }
 
-    public Text getGraphic(Text node) {
+    public Node getGraphic(Node node) {
         return graphic;
     }
 
@@ -610,43 +606,37 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
 
     private class Delta {
 
-*
+        /**
          * The x.
-
-
+         */
         Double x;
 
-*
+        /**
          * The y.
-
-
+         */
         Double y;
     }
 
     private class TransparentWindow extends StackPane {
-*
+        /**
          * The logger.
-
-
+         */
         private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
-*
+        /**
          * The Window
-
-
+         */
         private Stage window = new Stage();
 
-*
+        /**
          * Constructor
-
-
+         */
         public TransparentWindow() {
-#4deeea	(77,238,234)
+            	/*#4deeea	(77,238,234)
                 #74ee15	(116,238,21)
                 #ffe700	(255,231,0)
                 #f000ff	(240,0,255)
-                #001eff	(0,30,255)
-
+                #001eff	(0,30,255)*/
             setStyle("-fx-background-color: rgba(255,231,0,0.3); -fx-border-color: #74ee15; -fx-border-width: 2;");
             //Window
             window.setTitle("Transparent Window");
@@ -656,27 +646,24 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
         }
 
 
-*
+        /**
          * @return the window
-
-
+         */
         public Stage getWindow() {
             return window;
         }
 
-*
+        /**
          * Close the Window
-
-
+         */
         public void close() {
             logger.info("closing transparent window");
             window.close();
         }
 
-*
+        /**
          * Show the Window
-
-
+         */
         public void show() {
             if (!window.isShowing()) {
                 logger.info("showing transparent window");
@@ -727,27 +714,22 @@ FontIcon full = FontIcon.of(MaterialDesign.MDI_FULLSCREEN, Color.valueOf("rgba(4
             if (snapped) {
                 if (m.getScreenY() > eventSource.y) {
                     snapped = false;
-                }
-else {
+                } /*else {
                     Rectangle2D screen = Screen.getScreensForRectangle(m.getScreenX(), m.getScreenY(), 1, 1).get(0).getVisualBounds();
                     primaryStage.setHeight(screen.getHeight());
-                }
-
-            }
-else {
+                }*/
+            } /*else {
                 // Move y axis.
                 primaryStage.setY(m.getScreenY() - delta.y);
-            }
-
+            }*/
 
             // Aero Snap off.
-if (maximized) {
+            /*if (maximized) {
                 primaryStage.setWidth(prevSize.x);
                 primaryStage.setHeight(prevSize.y);
                 setMaximized(false);
             }
-
-
+*/
             boolean toCloseWindow = false;
             if (!snap.get()) {
                 toCloseWindow = true;
@@ -785,9 +767,7 @@ if (maximized) {
                 }
 
                 // Aero Snap Top. || Aero Snap Bottom.
-                else if (m.getScreenY() <= screen.getMinY()
-|| m.getScreenY() >= screen.getMaxY() - 1
-) {
+                else if (m.getScreenY() <= screen.getMinY() /*|| m.getScreenY() >= screen.getMaxY() - 1*/) {
                     logger.info("snapped top");
                     transparentWindow.getWindow().setX(screen.getMinX());
                     transparentWindow.getWindow().setY(screen.getMinY());
@@ -852,9 +832,7 @@ if (maximized) {
                 }
 
                 // Aero Snap Top ||  Aero Snap Bottom
-                else if (m.getScreenY() <= screen.getMinY()
-|| m.getScreenY() >= screen.getMaxY() - 1
-) {
+                else if (m.getScreenY() <= screen.getMinY() /*|| m.getScreenY() >= screen.getMaxY() - 1*/) {
                     logger.info("snapping stage to top  - maximizing window");
                     if (!screen.contains(prevPos.x, prevPos.y)) {
                         if (prevSize.x > screen.getWidth())
@@ -884,4 +862,3 @@ if (maximized) {
 
 
 }
-*/

@@ -1,11 +1,11 @@
 package np.playground.core;
 
-import com.jfoenix.controls.JFXDecorator;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import np.playground.core.util.Decorator;
 
 @SuppressWarnings("all")
 public abstract class App extends Application {
@@ -20,7 +20,10 @@ public abstract class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        primaryStage.setScene(new Scene(new JFXDecorator(primaryStage, getView(primaryStage)), 800, 600));
+        primaryStage.setScene(new Scene(new Decorator(primaryStage, getView(primaryStage)), 800, 600));
+        primaryStage.getScene().getStylesheets()
+                .add(App.class.getResource("/scrollbar.css").toExternalForm());
+
         primaryStage.show();
     }
 

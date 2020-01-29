@@ -18,7 +18,7 @@
     <properties>
         <!--<bundle.out.dir>D:\OSGi Playground\Runtimes\playground\bundle</bundle.out.dir>-->
         <bundle.out.dir>
-            C:\Users\Development\Desktop\OSGI\org.apache.felix.main.distribution-6.0.3\felix-framework-6.0.3\bundle
+            C:\Users\Development\Desktop\OSGI\org.apache.felix.main.distribution-6.0.3\felix-framework-6.0.3
         </bundle.out.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

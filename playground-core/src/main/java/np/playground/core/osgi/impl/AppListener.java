@@ -1,6 +1,6 @@
 package np.playground.core.osgi.impl;
 
-import com.jfoenix.controls.JFXDecorator;
+
 import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -15,6 +15,7 @@ import org.osgi.framework.*;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import np.playground.core.util.Decorator;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -47,7 +48,7 @@ public class AppListener implements ServiceListener {
             console.setShowing(false);
             osgiConsoleStage.hide();
         });
-        osgiConsoleStage.setScene(new Scene(new JFXDecorator(osgiConsoleStage, console)));
+        osgiConsoleStage.setScene(new Scene(new Decorator(osgiConsoleStage, console)));
     }
 
     private void startTracker() {
