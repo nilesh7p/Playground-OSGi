@@ -6,11 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="playground-tray" />
+        <module name="playground-testapp" />
         <module name="testapp" />
-        <module name="testanotherapp" />
         <module name="playground-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="playground-tray" target="1.8" />
+      <module name="testanotherapp" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

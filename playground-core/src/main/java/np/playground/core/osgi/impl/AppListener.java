@@ -10,12 +10,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import np.playground.core.App;
 import np.playground.core.AppProvider;
+import np.playground.core.util.Decorator;
 import np.playground.core.util.PlaygroundUtil;
 import org.osgi.framework.*;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import np.playground.core.util.Decorator;
 
 import java.lang.reflect.Field;
 import java.util.*;

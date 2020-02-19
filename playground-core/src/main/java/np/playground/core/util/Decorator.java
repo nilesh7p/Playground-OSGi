@@ -104,7 +104,7 @@ public final class Decorator extends VBox {
         setId("decorator");
         setPickOnBounds(false);
         // setStyle("-fx-background-color: linear-gradient(to bottom right, #facb52 0.0%, #fc76b3 100%)");
-        logger.info("self initialization complete");
+        //logger.info("self initialization complete");
     }
 
     private void initializeParts() {
@@ -150,7 +150,7 @@ public final class Decorator extends VBox {
         //FontIcon resizeMin = FontIcon.of(MaterialDesign.MDI_WINDOW_RESTORE, Color.valueOf("rgba(40,40,40,0.7)"));
 
         btnMax = createButton("btnMax", resizeMax, () -> maximize(resizeMin, resizeMax));
-        logger.info("button initialization complete");
+        //logger.info("button initialization complete");
     }
 
     private void maximize(Node resizeMin, Node resizeMax) {
@@ -231,7 +231,7 @@ public final class Decorator extends VBox {
         contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.valueOf("rgba(40,40,40,0.5)"), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 2, 2, 2))));
 
         ((Region) nodeToDecorate).setMinSize(0, 0);
-        logger.info("container initialization complete");
+        //logger.info("container initialization complete");
     }
 
     private void layoutParts() {
@@ -248,13 +248,13 @@ public final class Decorator extends VBox {
         clip.heightProperty().bind(((Region) nodeToDecorate).heightProperty());
         nodeToDecorate.setClip(clip);
         getChildren().addAll(buttonsContainer, contentPlaceHolder);
-        logger.info("part layout complete");
+        //logger.info("part layout complete");
     }
 
     private void setupBindings() {
         text.textProperty().bind(title); //binds the Text's text to title
         title.bind(primaryStage.titleProperty()); //binds title to the primaryStage's title
-        logger.info("binding setup complete");
+        //logger.info("binding setup complete");
     }
 
     private void setupHandlers() {
@@ -281,7 +281,7 @@ public final class Decorator extends VBox {
         // handle drag events on the decorator pane
         addEventFilter(MouseEvent.MOUSE_RELEASED, (mouseEvent) -> isDragging = false);
         this.setOnMouseDragged(this::handleDragEventOnDecoratorPane);
-        logger.info("handler setup complete");
+        //logger.info("handler setup complete");
     }
 
     private void setupValueChangeListeners() {
@@ -657,7 +657,7 @@ public final class Decorator extends VBox {
          * Close the Window
          */
         public void close() {
-            logger.info("closing transparent window");
+            //logger.info("closing transparent window");
             window.close();
         }
 
@@ -666,10 +666,10 @@ public final class Decorator extends VBox {
          */
         public void show() {
             if (!window.isShowing()) {
-                logger.info("showing transparent window");
+                //logger.info("showing transparent window");
                 window.show();
             } else {
-                logger.info("requested focus on transparent window");
+                //logger.info("requested focus on transparent window");
                 window.requestFocus();
             }
         }
@@ -680,7 +680,7 @@ public final class Decorator extends VBox {
         buttonsContainer.addEventHandler(MouseEvent.MOUSE_PRESSED, this::aeroMousePressed);
         addEventHandler(MouseEvent.MOUSE_DRAGGED, this::aeroMouseDragged);
         addEventHandler(MouseEvent.MOUSE_RELEASED, this::aeroMouseReleased);
-        logger.info("aero setup complete");
+        //logger.info("aero setup complete");
     }
 
     private void aeroMousePressed(MouseEvent m) {
@@ -747,7 +747,7 @@ public final class Decorator extends VBox {
                     } else {
                         transparentWindow.getWindow().setWidth(screen.getWidth() / 2);
                     }
-                    logger.info("snapped left");
+                    //logger.info("snapped left");
                     transparentWindow.show();
                 }
 
@@ -762,13 +762,13 @@ public final class Decorator extends VBox {
                         transparentWindow.getWindow().setWidth(screen.getWidth() / 2);
                     }
                     transparentWindow.getWindow().setX(screen.getMaxX() - transparentWindow.getWindow().getWidth());
-                    logger.info("snapped right");
+                    //logger.info("snapped right");
                     transparentWindow.show();
                 }
 
                 // Aero Snap Top. || Aero Snap Bottom.
                 else if (m.getScreenY() <= screen.getMinY() /*|| m.getScreenY() >= screen.getMaxY() - 1*/) {
-                    logger.info("snapped top");
+                    //logger.info("snapped top");
                     transparentWindow.getWindow().setX(screen.getMinX());
                     transparentWindow.getWindow().setY(screen.getMinY());
                     transparentWindow.getWindow().setWidth(screen.getWidth());
@@ -801,7 +801,7 @@ public final class Decorator extends VBox {
 
                 // Aero Snap Left.
                 if (m.getScreenX() <= screen.getMinX()) {
-                    logger.info("snapping stage to Left");
+                    //logger.info("snapping stage to Left");
                     primaryStage.setY(screen.getMinY());
                     primaryStage.setHeight(screen.getHeight());
 
@@ -817,7 +817,7 @@ public final class Decorator extends VBox {
 
                 // Aero Snap Right.
                 else if (m.getScreenX() >= screen.getMaxX() - 1) {
-                    logger.info("snapping stage to Right");
+                    //logger.info("snapping stage to Right");
                     primaryStage.setY(screen.getMinY());
                     primaryStage.setHeight(screen.getHeight());
 
@@ -833,7 +833,7 @@ public final class Decorator extends VBox {
 
                 // Aero Snap Top ||  Aero Snap Bottom
                 else if (m.getScreenY() <= screen.getMinY() /*|| m.getScreenY() >= screen.getMaxY() - 1*/) {
-                    logger.info("snapping stage to top  - maximizing window");
+                    //logger.info("snapping stage to top  - maximizing window");
                     if (!screen.contains(prevPos.x, prevPos.y)) {
                         if (prevSize.x > screen.getWidth())
                             prevSize.x = screen.getWidth() - 20;
