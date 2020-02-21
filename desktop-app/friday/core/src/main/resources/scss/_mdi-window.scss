@@ -1,0 +1,38 @@
+@import "includes";
+.internal-window {
+  -fx-border-color: black;
+  -fx-background-radius: 0 0 0 0;
+  -fx-border-radius: 0 0 0 0;
+  -fx-pref-width: px(400);
+  -fx-pref-height: px(400);
+}
+
+.internal-window-titlebar {
+  -fx-background-color: black;
+  -fx-border-color: transparent transparent #C4C4C4 transparent;
+  -fx-background-radius: 0 0 0 0;
+  -fx-border-radius: 0 0 0 0;
+}
+
+.internal-window:active .internal-window-titlebar {
+  -fx-background-color: black;
+  -fx-border-color: transparent transparent #C4C4C4 transparent;
+}
+
+.internal-window-titlebar-title {
+  -fx-text-fill: white;
+}
+
+.internal-window-titlebar-button {
+  -fx-background-color: transparent;
+  -fx-focus-traversable: false;
+
+  & .ikonli-font-icon {
+    -fx-fill: white;
+  }
+
+}
+
+.internal-window-content {
+-fx-background-color: -linear-grad-new-retrowave;
+}

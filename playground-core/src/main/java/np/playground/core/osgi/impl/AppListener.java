@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static np.playground.core.util.PlaygroundUtil.getObjectClass;
+import static np.playground.core.util.PlaygroundUtil.*;
 
 public class AppListener implements ServiceListener {
     private final BundleContext bundleContext;
@@ -48,6 +48,8 @@ public class AppListener implements ServiceListener {
             console.setShowing(false);
             osgiConsoleStage.hide();
         });
+        osgiConsoleStage.setTitle("Console");
+        osgiConsoleStage.getIcons().add(toFXImage(DEFAULT_CONSOLE_ICON));
         osgiConsoleStage.setScene(new Scene(new Decorator(osgiConsoleStage, console)));
     }
 

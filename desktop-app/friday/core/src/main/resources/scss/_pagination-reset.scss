@@ -1,0 +1,10 @@
+.pagination{
+  -fx-padding: 0;
+  -fx-border-width: 0px;
+}
+.pagination > .page {
+  -fx-background-color: transparent;
+}
+.pagination > .pagination-control {
+  -fx-background-color: transparent;
+}

@@ -211,6 +211,7 @@ public final class Decorator extends VBox {
         buttonsContainer.setBackground(new Background(new BackgroundFill(Color.valueOf("rgba(0,0,0,0.5)"), CornerRadii.EMPTY, Insets.EMPTY)));
         buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
         buttonsContainer.setMinWidth(180);
+        buttonsContainer.setMinHeight(40);
 
         text = new Text();
         text.getStyleClass().addAll("decorator-text", "title", "decorator-title");
@@ -795,7 +796,6 @@ public final class Decorator extends VBox {
             if (!snap.get()) {
                 return;
             }
-
             if ((MouseButton.PRIMARY.equals(m.getButton())) && (m.getScreenX() != eventSource.x)) {
                 Rectangle2D screen = Screen.getScreensForRectangle(m.getScreenX(), m.getScreenY(), 1, 1).get(0).getVisualBounds();
 
@@ -854,7 +854,7 @@ public final class Decorator extends VBox {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
         //Hide the transparent window -- close this window no matter what
         transparentWindow.close();

@@ -11,6 +11,8 @@
     <modules>
         <module>playground-core</module>
         <module>testapp</module>
+        <module>tray</module>
+        <!--<module>desktop-app</module>-->
     </modules>
 
     <properties>

@@ -11,7 +11,6 @@ public class TestApp extends App {
     private final String appName;
 
     public TestApp(BundleContext bundleContext) {
-        super();
         this.appName = bundleContext.getBundle().getSymbolicName();
     }
 

@@ -1,0 +1,45 @@
+@import 'includes';
+
+#taskbar-view {
+
+  @include set-height(px(36));
+  -fx-background-color: rgba(40, 40, 40, 0.7);
+  -fx-padding: px(2);
+
+  & #menu-button, #tile-button {
+    @include reset();
+    -fx-border-width: px(1);
+    @include set-square-size(px(28));
+
+    & #menu-icon, #tile-icon {
+      -fx-fill: white;
+    }
+  }
+
+  & #menu-button:hover, #tile-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+
+    & #menu-icon, #tile-icon {
+      -fx-fill: #00ff00;
+    }
+  }
+
+  & #glass-button {
+    @include reset();
+    -fx-border-width: px(1);
+    -fx-border-color: rgba(20, 20, 20, 0.7);
+    @include set-size(px(10), px(28))
+  }
+
+  & #glass-button:hover {
+    -fx-background-color: rgba(200, 200, 200, 0.7);
+  }
+
+  & #taskbar {
+    @include reset();
+    @include set-height(px(32));
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: px(1);
+  }
+}

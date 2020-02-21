@@ -1,0 +1,148 @@
+.task-bar .icon {
+  -fx-background-color: transparent;
+  -icon-size: 2.85714em;
+  -fx-max-width: -icon-size;
+  -fx-max-height: -icon-size;
+  -fx-min-width: -icon-size;
+  -fx-min-height: -icon-size;
+  -fx-pref-width: -icon-size;
+  -fx-pref-height: -icon-size;
+}
+.task-bar .icon .shape {
+  -shape-width: 1.14286em;
+  -shape-height: 1.14286em;
+  -fx-max-width: -shape-width;
+  -fx-max-height: -shape-height;
+  -fx-min-width: -shape-width;
+  -fx-min-height: -shape-height;
+  -fx-pref-width: -shape-width;
+  -fx-pref-height: -shape-height;
+}
+
+.task-bar .scroller {
+  -fx-shape: "M 10 17 L 15 12 L 10 7 L 10 17 Z";
+  -shape-width: 0.29764em;
+  -shape-height: 0.59521em;
+}
+
+.task-bar .task-bar-cell .tab-box .close-icon .shape:hover {
+  -fx-shape: "M 12 2 C 6.47 2 2 6.47 2 12 C 2 17.53 6.47 22 12 22 C 17.53 22 22 17.53 22 12 C 22 6.47 17.53 2 12 2 Z M 17 15.59 L 15.59 17 L 12 13.41 L 8.41 17 L 7 15.59 L 10.59 12 L 7 8.41 L 8.41 7 L 12 10.59 L 15.59 7 L 17 8.41 L 13.41 12 L 17 15.59 Z";
+  -shape-width: 1.1905em;
+  -shape-height: 1.1905em;
+}
+
+.task-bar .task-bar-cell .tab-box .close-icon .shape {
+  -fx-shape: "M 19 6.41 L 17.59 5 L 12 10.59 L 6.41 5 L 5 6.41 L 10.59 12 L 5 17.59 L 6.41 19 L 12 13.41 L 17.59 19 L 19 17.59 L 13.41 12 Z";
+  -shape-width: 0.83336em;
+  -shape-height: 0.83336em;
+}
+
+.task-bar {
+  -fx-background-color: transparent;
+}
+.task-bar .task-bar-cell {
+  -fx-padding: 0;
+  -fx-max-width: 17em;
+  -fx-background-color: rgba(0, 0, 0, 0.7);
+}
+.task-bar .task-bar-cell:hover {
+  -fx-cursor: hand;
+}
+.task-bar .task-bar-cell:pressed {
+  -fx-background-color: rgba(0, 0, 0, 0.9);
+}
+.task-bar .task-bar-cell .tab-box {
+  -fx-max-height: 0;
+  -fx-alignment: CENTER;
+  -fx-border-width: 0 1px 0 1px;
+  -fx-border-color: transparent transparent transparent transparent;
+  -fx-padding: 0 .5em 0 1em;
+}
+.task-bar .task-bar-cell .tab-box .tab-icon {
+  -fx-fill: -secondary-color;
+}
+.task-bar .task-bar-cell .tab-box .tab-name-lbl {
+  -fx-max-width: 16.5em;
+  -fx-padding: 0 .5em 0 .5em;
+}
+.task-bar .task-bar-cell .tab-box .tab-name-lbl .text {
+  -fx-fill: -secondary-color;
+}
+.task-bar .task-bar-cell .tab-box .close-icon {
+  -icon-size: 1.85714em;
+}
+.task-bar .task-bar-cell .tab-box .close-icon .shape {
+  -fx-background-color: -error-color;
+  -shape-width: 0.57143em;
+  -shape-height: 0.57143em;
+}
+.task-bar .task-bar-cell .tab-box .close-icon .shape:hover {
+  -fx-cursor: hand;
+  -shape-width: 1.1905em;
+  -shape-height: 1.1905em;
+}
+.task-bar .task-bar-cell:selected {
+  -fx-background-color: -background-color;
+  -fx-background-radius: 0.35714em 0.35714em 0 0;
+  -fx-border-radius: 0.35714em 0.35714em 0 0;
+  -fx-cursor: inherit;
+  -fx-background-insets: 0 0 0 -1.2px;
+}
+.task-bar .task-bar-cell:selected .tab-box {
+  -fx-border-color: transparent;
+}
+.task-bar .task-bar-cell:selected .tab-box .tab-icon, .task-bar .task-bar-cell:selected .tab-box .tab-name-lbl .text {
+  -fx-fill: -on-background-color;
+}
+.task-bar .task-bar-cell:selected .tab-box .close-icon .shape {
+  -fx-background-color: -on-background-color;
+}
+.task-bar .task-bar-cell:selected .tab-box .close-icon .shape:hover {
+  -fx-background-color: -error-color;
+}
+.task-bar .first-child {
+ /**
+* Remove the insets which were set in the :selected section.
+* Otherwise the end of the SelectionStrip would cut off the side.
+*/
+  -fx-background-insets: 0 !important;
+}
+.task-bar .fader.left {
+  -fx-background-color: black;
+}
+.task-bar .fader.right {
+  -fx-background-color: black;
+}
+.task-bar .scroller {
+  -fx-background-color: rgba(70, 255, 0, 0.7);
+  -fx-padding: 0;
+  -shape-width: 1.42857em;
+  -shape-height: 2.85714em;
+  -fx-max-width: -shape-width;
+  -fx-max-height: -shape-height;
+  -fx-min-width: -shape-width;
+  -fx-min-height: -shape-height;
+  -fx-pref-width: -shape-width;
+  -fx-pref-height: -shape-height;
+  -fx-background-insets: 1.13086em 0.56543em 1.13086em 0.56543em;
+}
+.task-bar .scroller.left {
+  -fx-rotate: 180;
+}
+.task-bar .scroller-btn {
+  -fx-background-color: transparent;
+  -fx-border-width: 0;
+  -fx-border-insets: 0;
+  -fx-border-image-insets: 0;
+  -fx-background-insets: 0;
+  -fx-border-radius: 0;
+  -fx-border-color: transparent;
+  -fx-background-radius: 0;
+  -fx-focus-traversable: false;
+  -fx-padding: 0;
+  -fx-border-image-radius: 0;
+  -fx-background-color: rgba(0, 0, 0, 0.9);
+}
+.task-bar .scroller-btn:hover {
+  -fx-background-color: black;
+}

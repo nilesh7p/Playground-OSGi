@@ -1,0 +1,122 @@
+@function px($px) {
+  @return 1em / 14 * $px; // 14px is defined by the default material design font-size
+}
+
+@mixin set-height($height) {
+  -fx-min-height: $height;
+  -fx-pref-height: $height;
+  -fx-max-height: $height;
+}
+
+@mixin set-width($width) {
+  -fx-min-width: $width;
+  -fx-pref-width: $width;
+  -fx-max-width: $width;
+}
+
+@mixin set-size($width, $height) {
+  @include set-width($width);
+  @include set-height($height);
+}
+
+@mixin set-square-size($sideLength) {
+  @include set-width($sideLength);
+  @include set-height($sideLength);
+}
+
+@mixin reset() {
+  -fx-background-color: transparent;
+  -fx-border-width: 0;
+  -fx-border-insets: 0;
+  -fx-border-image-insets: 0;
+  -fx-background-insets: 0;
+  -fx-border-radius: 0;
+  -fx-border-color: transparent;
+  -fx-background-radius: 0;
+  -fx-focus-traversable: false;
+  -fx-padding: 0;
+  -fx-border-image-radius: 0;
+}
+
+// Base format of an icon: two StackPanes into each other.
+%icon-base {
+  & .icon {
+    -fx-background-color: transparent;
+    // tablet
+    //-icon-size: 48px;
+    // desktop
+    -icon-size: px(40);
+    -fx-max-width: -icon-size;
+    -fx-max-height: -icon-size;
+    -fx-min-width: -icon-size;
+    -fx-min-height: -icon-size;
+    -fx-pref-width: -icon-size;
+    -fx-pref-height: -icon-size;
+
+    & .shape {
+      // tablet
+      //-shape-width: 20px;
+      //-shape-height: 20px;
+      // desktop
+      -shape-width: px(16);
+      -shape-height: px(16);
+      -fx-max-width: -shape-width;
+      -fx-max-height: -shape-height;
+      -fx-min-width: -shape-width;
+      -fx-min-height: -shape-height;
+      -fx-pref-width: -shape-width;
+      -fx-pref-height: -shape-height;
+    }
+  }
+}
+
+// ----- SVG paths of material design icons ---------------------------------------------------- //
+// ----- Designs available at: ----------------------------------------------------------------- //
+// ----- https://material.io/tools/icons/?icon=vertical_split&style=baseline ------------------- //
+%add-icon {
+  -fx-shape: "M 19 13 L 13 13 L 13 19 L 11 19 L 11 13 L 5 13 L 5 11 L 11 11 L 11 5 L 13 5 L 13 11 L 19 11 L 19 13 Z";
+  //-shape-width: 14px; // -> tablet size
+  //-shape-height: 14px; // -> tablet size
+  -shape-width: px(11.667);
+  -shape-height: px(11.667);
+}
+
+%arrow-back-icon {
+  -fx-shape: "M 20 11 L 7.83 11 L 13.42 5.41 L 12 4 L 4 12 L 12 20 L 13.41 18.59 L 7.83 13 L 20 13 L 20 11 Z";
+  //-shape-width: 16px; // -> tablet size
+  //-shape-height: 16px; // -> tablet size
+  -shape-width: px(13.333);
+  -shape-height: px(13.333);
+}
+
+%arrow-right-icon {
+  -fx-shape: "M 10 17 L 15 12 L 10 7 L 10 17 Z";
+  //-shape-width: 5px; // -> tablet size
+  //-shape-height: 10px; // -> tablet size
+  -shape-width: px(4.167);
+  -shape-height: px(8.333);
+}
+
+%cancel-icon {
+  -fx-shape: "M 12 2 C 6.47 2 2 6.47 2 12 C 2 17.53 6.47 22 12 22 C 17.53 22 22 17.53 22 12 C 22 6.47 17.53 2 12 2 Z M 17 15.59 L 15.59 17 L 12 13.41 L 8.41 17 L 7 15.59 L 10.59 12 L 7 8.41 L 8.41 7 L 12 10.59 L 15.59 7 L 17 8.41 L 13.41 12 L 17 15.59 Z";
+  //-shape-width: 20px; // -> tablet size
+  //-shape-height: 20px; // -> tablet size
+  -shape-width: px(16.667);
+  -shape-height: px(16.667);
+}
+
+%close-icon {
+  -fx-shape: "M 19 6.41 L 17.59 5 L 12 10.59 L 6.41 5 L 5 6.41 L 10.59 12 L 5 17.59 L 6.41 19 L 12 13.41 L 17.59 19 L 19 17.59 L 13.41 12 Z";
+  //-shape-width: 14px; // -> tablet size
+  //-shape-height: 14px; // -> tablet size
+  -shape-width: px(11.667);
+  -shape-height: px(11.667);
+}
+
+%menu-icon {
+  -fx-shape: "M 3 18 L 21 18 L 21 16 L 3 16 L 3 18 Z M 3 13 L 21 13 L 21 11 L 3 11 L 3 13 Z M 3 6 L 3 8 L 21 8 L 21 6 L 3 6 Z";
+  //-shape-width: 18px; // -> tablet size
+  //-shape-height: 12px; // -> tablet size
+  -shape-width: px(15);
+  -shape-height: px(10);
+}

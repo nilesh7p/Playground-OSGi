@@ -1,0 +1,72 @@
+#gradients-view {
+  -fx-padding: 0 0 2em 0;
+  -fx-arrows-visible: false;
+  -fx-page-information-visible: false;
+  -fx-tooltip-visible: false;
+}
+#gradients-view:one-page {
+  -fx-padding: 0;
+}
+#gradients-view:one-page > .pagination-control {
+  -fx-opacity: 0;
+}
+#gradients-view .page {
+  -fx-background-color: transparent;
+}
+#gradients-view .page .page-control {
+  -fx-background-color: transparent;
+}
+#gradients-view .page .page-control .tile-pane {
+  -fx-vgap: 3em;
+  -fx-hgap: 3em;
+  -fx-padding: 1.5em;
+  -fx-alignment: CENTER;
+  -fx-background-color: transparent;
+}
+#gradients-view .page .page-control .tile-pane .tile-box {
+  -fx-alignment: CENTER;
+  -fx-pref-width: 13.5em;
+  -fx-pref-height: 8.34346em;
+  -fx-effect: -drop-shadow-1;
+  -fx-border-width: 0;
+  -fx-border-radius: 0.35714em;
+  -fx-background-radius: 0.35714em;
+  -fx-background-insets: 0;
+}
+#gradients-view .page .page-control .tile-pane .tile-box .icon .ikonli-font-icon {
+  -fx-fill: -on-surface-color;
+  -fx-font-size: 1.42857em !important;
+}
+#gradients-view .page .page-control .tile-pane .tile-box .text-lbl {
+  -fx-padding: .5em 0 0 0;
+  -fx-alignment: CENTER;
+  -fx-text-alignment: CENTER;
+}
+#gradients-view .page .page-control .tile-pane .tile-box .text-lbl .text {
+  -fx-fill: -on-surface-color;
+}
+#gradients-view .page .page-control .tile-pane .tile-box:hover {
+  -fx-effect: -drop-shadow-2;
+  -fx-cursor: hand;
+}
+#gradients-view .page .page-control .tile-pane .tile-box:pressed {
+  -fx-effect: -drop-shadow-3;
+}
+#gradients-view .page > .pagination-control > .control-box {
+  -fx-spacing: .25em;
+}
+#gradients-view .page > .pagination-control > .control-box > .bullet-button {
+  -fx-background-radius: 50%;
+  -fx-background-insets: 0.45em;
+  -fx-background-color: -secondary-variant-color;
+}
+#gradients-view .page > .pagination-control > .control-box > .bullet-button:hover {
+  -fx-cursor: hand;
+  -fx-background-color: derive(-secondary-variant-color, 25%);
+}
+#gradients-view .page > .pagination-control > .control-box > .bullet-button:selected {
+  -fx-background-color: -secondary-color;
+}
+#gradients-view .page > .pagination-control > .control-box > .bullet-button:selected:hover {
+  -fx-cursor: inherit;
+}
