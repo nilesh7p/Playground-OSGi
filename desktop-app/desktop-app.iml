@@ -17,5 +17,7 @@
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.30" level="project" />
     <orderEntry type="library" name="Maven: com.jfoenix:jfoenix:8.0.8" level="project" />
+    <orderEntry type="module" module-name="core" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:27.0.1-jre" level="project" />
   </component>
 </module>

@@ -6,12 +6,14 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../friday/pom.xml" />
-        <option value="$PROJECT_DIR$/../FXDesktop/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/testapptwo/pom.xml" />
+        <option value="$PROJECT_DIR$/../friday/gradients-module/pom.xml" />
+        <option value="$PROJECT_DIR$/../friday/launcher/pom.xml" />
+        <option value="$PROJECT_DIR$/../friday/pom.xml" />
       </set>
     </option>
   </component>

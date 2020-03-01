@@ -20,10 +20,13 @@ public class Activator implements BundleActivator {
         appListener = new AppListener(bundleContext);
         AppBundleListener appBundleListener = new AppBundleListener(bundleContext);
         AppFrameworkListener appFrameworkListener = new AppFrameworkListener(bundleContext);
+
         bundleContext.addServiceListener(appListener);
         logger.info("Registered app listener");
+
         bundleContext.addBundleListener(appBundleListener);
         logger.info("Registered appBundle listener");
+
         bundleContext.addFrameworkListener(appFrameworkListener);
         logger.info("Registered appFramework listener");
     }

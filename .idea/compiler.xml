@@ -6,11 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="FXDesktop" />
+        <module name="playground-tray" />
         <module name="desktop-app" />
         <module name="playground-core" />
-        <module name="launcher" />
-        <module name="gradients-module" />
         <module name="testapp" />
         <module name="core" />
         <module name="tray" />
@@ -18,10 +16,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="desktop-app" target="1.8" />
+      <module name="friday" target="1.8" />
+      <module name="FXDesktop" target="1.5" />
+      <module name="gradients-module" target="1.8" />
+      <module name="launcher" target="1.8" />
       <module name="playground-testapp2" target="1.8" />
       <module name="playground-testapptwo" target="1.8" />
-      <module name="playground-tray" target="1.8" />
       <module name="testanotherapp" target="1.8" />
     </bytecodeTargetLevel>
   </component>
